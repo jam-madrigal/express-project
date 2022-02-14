@@ -38,7 +38,7 @@ app.get('/characters/:characterId', (req, res) => {
         // Just using res.json is fine here because express will handle it for us, but res.status makes it explicit. We still have to convert it to json to send a json back
         res.status(200).json(character);
     } else {
-        // Here, we do need to be explicit and change the status to 404 if our character doesn't exist, because otherwise, the endpoint already does technically exist even if it fails to find a character
+        // Here, we do need to be explicit and change the status to 404 if our character doesn't exist, because otherwise, the endpoint already does technically exist even if it fails to find a character. Again, res.send() would also work here, but we are explicit with res.json()
         res.status(404).json({
             error: "Character does not exist."
         });

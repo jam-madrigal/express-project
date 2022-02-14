@@ -1,5 +1,23 @@
 {
   "dependencies": {
     "express": "^4.17.2"
-  }
+  },
+  "name": "express-project",
+  "description": "Just a repository to try new things with my express skills and rehearse them. This repo will likely change completely several times.",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jam-madrigal/express-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jam-madrigal/express-project/issues"
+  },
+  "homepage": "https://github.com/jam-madrigal/express-project#readme"
 }

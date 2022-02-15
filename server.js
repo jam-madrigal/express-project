@@ -24,9 +24,12 @@ const characters = [
 
 // Writing some middleware to log our requests and tell us how long it takes them to complete
 app.use((req, res, next) => {
-    console.log(`${req.method} ${req.url}`);
-    // Calling the next function to ensure that this function is not an endpoint and is passed to the correct handler
+    const start = Date.now();
+    // Calling the next function to ensure that this function is not an endpoint and is passed to the correct handler. If you comment out next(); express will hang and timeout, never sending a response. Try this out with postman.
     next();
+    const delta = Date.now() - start;
+    console.log(delta);
+    console.log(`${req.method} ${req.url} ${delta}ms`);
 });
 
 app.get('/characters', (req, res) => {

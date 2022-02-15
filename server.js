@@ -22,6 +22,13 @@ const characters = [
     }
 ]
 
+// Writing some middleware to log our requests and tell us how long it takes them to complete
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    // Calling the next function to ensure that this function is not an endpoint and is passed to the correct handler
+    next();
+});
+
 app.get('/characters', (req, res) => {
     // Express will automatically make this 'Content-type' to 'application/json', res.json() will give it extra insurance to do so over res.send()
     res.json(characters);

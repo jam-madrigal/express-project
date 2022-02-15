@@ -36,9 +36,9 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 app.post('/characters', (req, res) => {
-    // Validate the request to make sure there is a name, using a 400 error for a client error. Error code 400 is a generic bad request, which is suitable here and often most appropriate.
+    // Validate the request to make sure there is a name, using a 400 error for a client error. Error code 400 is a generic bad request, which is suitable here and often most appropriate. Make sure you return here when we shouldn't be trying to post a request anyway, otherwise the code will continue and cause an error about not being able to set http headers after they are already sent to the client. If there is no return, it would try to send a .json() more than once, when express can only send one thing. 
     if (!req.body.name || !req.body.profession) {
-        res.status(400).json({
+        return res.status(400).json({
             error: 'Missing character name or profession'
         });
     }

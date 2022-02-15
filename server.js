@@ -1,5 +1,6 @@
 // If our file is named server.js, it will automatically run without having to add it as a script in package.json when npm start is ran
 // Express is very valuable, because after using node's default http, and having to add a lot of status codes manually, and code how to respond requests and responses adn serve or post data at a more precise level, we can see that express handles the most common status codes for us by default, and we can send data in the res.send() function. The handlers are also simplified, and we can simply use app.[methodtypehere] and then add our endpoints and callback functions, instead of having to set up more specific handlers with conditionals and server classes manually. It will also choose the 'Content-type' automatically.
+const { json } = require('express');
 const express = require('express');
 
 const app = express();
@@ -35,11 +36,21 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 app.post('/characters', (req, res) => {
+    // Validate the request to make sure there is a name, using a 400 error for a client error. Error code 400 is a generic bad request, which is suitable here and often most appropriate.
+    if (!req.body.name || !req.body.profession) {
+        res.status(400).json({
+            error: 'Missing character name or profession'
+        });
+    }
     const newCharacter = {
-        id: req.body.id,
+        // To make the ID auto-increment, since the .length of an array will always be one higher than the indexes, we can use that to keep the new ID one ahead of the previous ID, since our IDs start at 0 just like an array
+        id: characters.length,
         'name': req.body.name,
         'profession': req.body.profession
     }
+    characters.push(newCharacter);
+
+    res.json(newCharacter);
 });
 
 app.get('/characters', (req, res) => {

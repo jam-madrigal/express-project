@@ -22,14 +22,24 @@ const characters = [
     }
 ]
 
-// Writing some middleware to log our requests and tell us how long it takes them to complete
+// Writing some middleware to log our requests and tell us how long it takes them to complete. It will run for every request to our server.
 app.use((req, res, next) => {
     const start = Date.now();
     // Calling the next function to ensure that this function is not an endpoint and is passed to the correct handler. If you comment out next(); express will hang and timeout, never sending a response. Try this out with postman.
     next();
     const delta = Date.now() - start;
-    console.log(delta);
     console.log(`${req.method} ${req.url} ${delta}ms`);
+});
+
+// Middleware to parse json during post requests, which is built into express. It should go below our timer middleware, so the latter captures as much info as possible. It looks at the content type, and sets the content body to json when the 'Content-type' is 'application/json'. This means we don't have to convert the request to json every single time ourselves.
+app.use(express.json());
+
+app.post('/characters', (req, res) => {
+    const newCharacter = {
+        id: req.body.id,
+        'name': req.body.name,
+        'profession': req.body.profession
+    }
 });
 
 app.get('/characters', (req, res) => {

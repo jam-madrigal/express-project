@@ -1,13 +1,15 @@
+const model = require('../models/characters.model');
+
 function getCharacters(req, res) {
     // Express will automatically make this 'Content-type' to 'application/json', res.json() will give it extra insurance to do so over res.send()
-    res.json(characters);
+    res.json(model);
 }
 
 function getCharacter(req, res) {
     // Convert the characterId to a number since it will be a string if taken from the request url. Can also be done by wrapping it in Number();
     const characterId = +req.params.characterId;
     // Assigning a variable to select the character from our array based on the parameter
-    const character = characters[characterId];
+    const character = model[characterId];
     // If the characterId exists in our array, send it to the client
     if (character) {
         // Just using res.json is fine here because express will handle it for us, but res.status makes it explicit. We still have to convert it to json to send a json back
@@ -29,11 +31,11 @@ function postCharacter(req, res) {
     }
     const newCharacter = {
         // To make the ID auto-increment, since the .length of an array will always be one higher than the indexes, we can use that to keep the new ID one ahead of the previous ID, since our IDs start at 0 just like an array
-        id: characters.length,
+        id: model.length,
         'name': req.body.name,
         'profession': req.body.profession
     }
-    characters.push(newCharacter);
+    model.push(newCharacter);
 
     res.json(newCharacter);
 }

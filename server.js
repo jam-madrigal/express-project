@@ -10,22 +10,6 @@ const app = express();
 
 const PORT = 3000;
 
-const characters = [
-    {
-        id: 0,
-        'name': 'witch',
-        'profession': 'sorcerer'
-    },
-    {   id: 1,
-        'name': 'king',
-        'profession': 'cattle'
-    },
-    {   id: 2,
-        'name': 'queen',
-        'profession': 'shepherd'
-    }
-]
-
 // Writing some middleware to log our requests and tell us how long it takes them to complete. It will run for every request to our server.
 app.use((req, res, next) => {
     const start = Date.now();

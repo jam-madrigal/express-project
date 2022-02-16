@@ -3,6 +3,9 @@
 const { json } = require('express');
 const express = require('express');
 
+const messagesController = require('./controllers/messages.controller');
+const characterController = require('./controllers/characters.controller');
+
 const app = express();
 
 const PORT = 3000;
@@ -35,54 +38,16 @@ app.use((req, res, next) => {
 // Middleware to parse json during post requests, which is built into express. It should go below our timer middleware, so the latter captures as much info happening after it as possible. It looks at the content type, and sets the content body to json when the 'Content-type' is 'application/json'. This means we don't have to convert the request to json every single time ourselves. If you try running a POST request without this, it's likely you'll get an error saying one of the key value pairs in the request is undefined.
 app.use(express.json());
 
-app.post('/characters', (req, res) => {
-    // Validate the request to make sure there is a name, using a 400 error for a client error. Error code 400 is a generic bad request, which is suitable here and often most appropriate. Make sure you return here when we shouldn't be trying to post a request anyway, otherwise the code will continue and cause an error about not being able to set http headers after they are already sent to the client. If there is no return, it would try to send a .json() more than once, when express can only send one thing. 
-    if (!req.body.name || !req.body.profession) {
-        return res.status(400).json({
-            error: 'Missing character name or profession'
-        });
-    }
-    const newCharacter = {
-        // To make the ID auto-increment, since the .length of an array will always be one higher than the indexes, we can use that to keep the new ID one ahead of the previous ID, since our IDs start at 0 just like an array
-        id: characters.length,
-        'name': req.body.name,
-        'profession': req.body.profession
-    }
-    characters.push(newCharacter);
+app.post('/characters', characterController.getCharacters);
 
-    res.json(newCharacter);
-});
-
-app.get('/characters', (req, res) => {
-    // Express will automatically make this 'Content-type' to 'application/json', res.json() will give it extra insurance to do so over res.send()
-    res.json(characters);
-});
+app.get('/characters', characterController.getCharacters);
 
 // How to parameterize a url in express, be sure to validate the user input parameter :characterId
-app.get('/characters/:characterId', (req, res) => {
-    // Convert the characterId to a number since it will be a string if taken from the request url. Can also be done by wrapping it in Number();
-    const characterId = +req.params.characterId;
-    // Assigning a variable to select the character from our array based on the parameter
-    const character = characters[characterId];
-    // If the characterId exists in our array, send it to the client
-    if (character) {
-        // Just using res.json is fine here because express will handle it for us, but res.status makes it explicit. We still have to convert it to json to send a json back
-        res.status(200).json(character);
-    } else {
-        // Here, we do need to be explicit and change the status to 404 if our character doesn't exist, because otherwise, the endpoint already does technically exist even if it fails to find a character. Again, res.send() would also work here, but we are explicit with res.json()
-        res.status(404).json({
-            error: "Character does not exist."
-        });
-    }
-});
+app.get('/characters/:characterId', characterController.getCharacter);
 
-app.get('/messages', (req, res) => {
-    res.send('<ul><li>Big witch soup</li></ul>');
-});
+app.get('/messages', messagesController.getMessages);
 
-app.post('/messages', (req, res) => {
-    console.log('Updating messages...');
-});
+app.post('/messages', messagesController.postMessage);
 
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`)

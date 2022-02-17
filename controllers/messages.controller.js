@@ -5,7 +5,7 @@ const path = require('path');
 function getMessages(req, res) {
     // res.send('<ul><li>Big witch soup</li></ul>');
     // __dirname is a built in variable that will grab the folder we're currently in. path.join will properly create a path from these directory and filenames using the appropriate backslashes or whatever any other operating system will use to make absolute paths. Expression automatically knows to change the content type depending on our filename as well. Very efficient.
-    res.sendFile(path.join(__dirname, '..', 'public', 'darkmeyer_by_SOFKAVODKA.png'));
+    res.sendFile(path.join(__dirname, '..', 'public', 'images', 'darkmeyer_by_SOFKAVODKA.png'));
 }
 
 function postMessage(req, res) {

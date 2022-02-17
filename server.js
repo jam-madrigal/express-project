@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 });
 
 // Using express.static() to serve a website, the parameter is a string taking in the relative path of the folder we want to make available to our server
-app.use(express.static('public'));
+app.use('/site', express.static('public'));
 
 // Middleware to parse json during post requests, which is built into express. It should go below our timer middleware, so the latter captures as much info happening after it as possible. It looks at the content type, and sets the content body to json when the 'Content-type' is 'application/json'. This means we don't have to convert the request to json every single time ourselves. If you try running a POST request without this, it's likely you'll get an error saying one of the key value pairs in the request is undefined.
 app.use(express.json());

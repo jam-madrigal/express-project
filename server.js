@@ -3,8 +3,8 @@
 const { json } = require('express');
 const express = require('express');
 
-const messagesController = require('./controllers/messages.controller');
-const characterController = require('./controllers/characters.controller');
+const charactersRouter = require('./routes/characters.router');
+const messagesRouter = require('./routes/messages.router');
 
 const app = express();
 
@@ -16,22 +16,16 @@ app.use((req, res, next) => {
     // Calling the next function to ensure that this function is not an endpoint and is passed to the correct handler. If you comment out next(); express will hang and timeout, never sending a response. Try this out with postman.
     next();
     const delta = Date.now() - start;
-    console.log(`${req.method} ${req.url} ${delta}ms`);
+    // After converting this to use express router, we need to also call the baseUrl if we want to see the specific path
+    console.log(`${req.method} ${req.baseUrl}${req.url} ${delta}ms`);
 });
 
 // Middleware to parse json during post requests, which is built into express. It should go below our timer middleware, so the latter captures as much info happening after it as possible. It looks at the content type, and sets the content body to json when the 'Content-type' is 'application/json'. This means we don't have to convert the request to json every single time ourselves. If you try running a POST request without this, it's likely you'll get an error saying one of the key value pairs in the request is undefined.
 app.use(express.json());
 
-app.post('/characters', characterController.postCharacter);
-
-app.get('/characters', characterController.getCharacters);
-
-// How to parameterize a url in express, be sure to validate the user input parameter :characterId
-app.get('/characters/:characterId', characterController.getCharacter);
-
-app.get('/messages', messagesController.getMessages);
-
-app.post('/messages', messagesController.postMessage);
+// Mounting the router. Combining this with express router means that, since we are already using charactersRouter.get, we do not need to include the specific path in our above endpoints/routers anymore. All the paths will be relative to the router we mounted here, simplifying our parameters in the endpoints in the router files
+app.use('/characters', charactersRouter);
+app.use('/messages', messagesRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`)

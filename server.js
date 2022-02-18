@@ -2,11 +2,16 @@
 // Express is very valuable, because after using node's default http, and having to add a lot of status codes manually, and code how to respond requests and responses adn serve or post data at a more precise level, we can see that express handles the most common status codes for us by default, and we can send data in the res.send() function. The handlers are also simplified, and we can simply use app.[methodtypehere] and then add our endpoints and callback functions, instead of having to set up more specific handlers with conditionals and server classes manually. It will also choose the 'Content-type' automatically.
 const { json } = require('express');
 const express = require('express');
+const path = require('path');
 
 const charactersRouter = require('./routes/characters.router');
 const messagesRouter = require('./routes/messages.router');
 
 const app = express();
+
+// Setting handlebars as our view engine and pointing to the views folder for our templates
+app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views'));
 
 const PORT = 3000;
 
@@ -20,8 +25,8 @@ app.use((req, res, next) => {
     console.log(`${req.method} ${req.baseUrl}${req.url} ${delta}ms`);
 });
 
-// Using express.static() to serve a website, the parameter is a string taking in the relative path of the folder we want to make available to our server
-app.use('/site', express.static('public'));
+// Using express.static() to serve a website, the parameter is a string taking in the relative path of the folder we want to make available to our server. If we don't use path.join to make an absolute path using this directory, it will try to find the path relative to the folder in which we start the server.js file with node.
+app.use('/site', express.static(path.join(__dirname, 'public',)));
 
 // Middleware to parse json during post requests, which is built into express. It should go below our timer middleware, so the latter captures as much info happening after it as possible. It looks at the content type, and sets the content body to json when the 'Content-type' is 'application/json'. This means we don't have to convert the request to json every single time ourselves. If you try running a POST request without this, it's likely you'll get an error saying one of the key value pairs in the request is undefined.
 app.use(express.json());

@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "hbs": "^4.2.0"
   },
   "name": "express-project",
   "description": "Just a repository to try new things with my express skills and rehearse them. This repo will likely change completely several times.",
